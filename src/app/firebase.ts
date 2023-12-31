@@ -24,7 +24,6 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-const analytics = getAnalytics(app);
 
 export class DB {
   static create = (path: string, input: object) => {
@@ -60,7 +59,3 @@ export class DB {
     remove(ref(db, `${path}/${id}`));
   };
 }
-
-export default {
-  analytics,
-};
