@@ -1,32 +1,93 @@
 "use client";
 import { DB } from "@/app/firebase";
-import { useEffect, useState } from "react";
-import styled from "styled-components";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 
 const RandomLunchView: React.FC = () => {
+  const [formData, setFormData] = useState<Food>({
+    name: "",
+    category: "",
+    region: "",
+    type: "",
+  });
   const [foods, setFoods] = useState([]);
 
+  const getFoods = () => {
+    DB.read("foods/");
+  };
+
   useEffect(() => {
-    DB.read("/foods");
+    const res = getFoods();
+    console.log("Res", res);
   }, []);
 
+  const handleChangeFormData = (e: ChangeEvent<HTMLInputElement>) => {
+    switch (e.target.name) {
+      case "name":
+        setFormData((prev) => ({
+          ...prev,
+          name: e.target.value,
+        }));
+        break;
+      case "category":
+        setFormData((prev) => ({
+          ...prev,
+          category: e.target.value,
+        }));
+        break;
+      case "region":
+        setFormData((prev) => ({
+          ...prev,
+          region: e.target.value,
+        }));
+        break;
+      default:
+        break;
+    }
+  };
+
+  const addFood = (event: FormEvent<HTMLFormElement>) => {
+    event?.preventDefault();
+    DB.create("foods/", [...foods, formData]);
+    getFoods();
+  };
+
   return (
-    <FoodListWrapper>
+    <div>
       {foods.map((e) => (
-        <FoodLabel>{e}</FoodLabel>
+        <div>{e}</div>
       ))}
-    </FoodListWrapper>
+      <form onSubmit={(e) => addFood(e)}>
+        {/* <input type={"checkbox"} checked /> */}
+        <div>
+          <label>음식명</label>
+          <input
+            name="name"
+            value={formData.name}
+            onChange={handleChangeFormData}
+          />
+        </div>
+
+        <div>
+          <label>카테고리</label>
+          <input
+            name="category"
+            value={formData.category}
+            onChange={handleChangeFormData}
+          />
+        </div>
+
+        <div>
+          <label>지역</label>
+          <input
+            name="region"
+            value={formData.region}
+            onChange={handleChangeFormData}
+          />
+        </div>
+        <button>추가하기</button>
+      </form>
+    </div>
   );
 };
-
-const FoodListWrapper = styled.div`
-  display: flex;
-  gap: 2px;
-`;
-
-const FoodLabel = styled.div`
-  color: #f4f4f4;
-  fontsize: 14px;
-`;
 
 export default RandomLunchView;

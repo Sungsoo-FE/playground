@@ -26,20 +26,18 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 export class DB {
-  static create = (path: string, input: object) => {
+  static create = (path: string, input: object | []) => {
     const uuid = uid();
 
-    set(ref(db, path + uuid), {
-      input,
-    });
+    set(ref(db, path + uuid), input);
   };
 
-  static read = (path: string) => {
+  static read = async (path: string) => {
     const dbRef = ref(db);
-    get(child(dbRef, path))
+    get(child(dbRef, `${path}`))
       .then((snapshot) => {
         if (snapshot.exists()) {
-          console.log(snapshot.val());
+          return snapshot.val();
         } else {
           console.log("No data available");
         }
@@ -49,10 +47,8 @@ export class DB {
       });
   };
 
-  static update = (path: string, id: string, input: object) => {
-    fbUpdate(ref(db, `${path}/${id}`), {
-      input,
-    });
+  static update = (path: string, id: string, input: object | []) => {
+    fbUpdate(ref(db, `${path}/${id}`), input);
   };
 
   static delete = (path: string, id: string) => {

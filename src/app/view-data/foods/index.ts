@@ -1,5 +1,6 @@
 interface Food {
   name: string;
   type: "";
-  category: string;
+  category?: string;
+  region?: string;
 }
