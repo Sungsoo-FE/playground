@@ -17,7 +17,6 @@ const RandomLunchView: React.FC = () => {
 
   useEffect(() => {
     const res = getFoods();
-    console.log("Res", res);
   }, []);
 
   const handleChangeFormData = (e: ChangeEvent<HTMLInputElement>) => {
@@ -57,7 +56,6 @@ const RandomLunchView: React.FC = () => {
         <div>{e}</div>
       ))}
       <form onSubmit={(e) => addFood(e)}>
-        {/* <input type={"checkbox"} checked /> */}
         <div>
           <label>음식명</label>
           <input
