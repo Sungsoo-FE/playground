@@ -9,14 +9,18 @@ const RandomLunchView: React.FC = () => {
     region: "",
     type: "",
   });
-  const [foods, setFoods] = useState([]);
+  const [foods, setFoods] = useState<Food[]>();
 
-  const getFoods = () => {
-    DB.read("foods/");
+  const getFoods = async () => {
+    const res = await DB.read("foods/");
+    if (res === "no data") {
+    } else {
+      setFoods(res);
+    }
   };
 
   useEffect(() => {
-    const res = getFoods();
+    getFoods();
   }, []);
 
   const handleChangeFormData = (e: ChangeEvent<HTMLInputElement>) => {
@@ -46,15 +50,13 @@ const RandomLunchView: React.FC = () => {
 
   const addFood = (event: FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
-    DB.create("foods/", [...foods, formData]);
+    DB.create("foods/", formData);
     getFoods();
   };
 
   return (
     <div>
-      {foods.map((e) => (
-        <div>{e}</div>
-      ))}
+      {foods?.length > 0 && foods.map((e) => <div key={e.name}>{e.name}</div>)}
       <form onSubmit={(e) => addFood(e)}>
         <div>
           <label>음식명</label>

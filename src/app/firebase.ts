@@ -7,6 +7,8 @@ import {
   get,
   child,
   remove,
+  push,
+  onValue,
   update as fbUpdate,
 } from "firebase/database";
 import { uid } from "uid";
@@ -26,25 +28,31 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 export class DB {
-  static create = (path: string, input: object | []) => {
-    const uuid = uid();
-
-    set(ref(db, path + uuid), input);
+  static create = (path: string, input: any) => {
+    const query = ref(db, path);
+    push(query, input);
   };
 
-  static read = async (path: string) => {
-    const dbRef = ref(db);
-    get(child(dbRef, `${path}`))
-      .then((snapshot) => {
-        if (snapshot.exists()) {
-          return snapshot.val();
-        } else {
-          console.log("No data available");
+  static read = (path: string): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      const query = ref(db, path);
+
+      onValue(
+        query,
+        (snapshot) => {
+          const data = snapshot.val();
+
+          if (snapshot.exists()) {
+            resolve(Object.values(data));
+          } else {
+            resolve("no data");
+          }
+        },
+        (error) => {
+          reject(error);
         }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+      );
+    });
   };
 
   static update = (path: string, id: string, input: object | []) => {
