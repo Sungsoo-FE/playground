@@ -10,6 +10,7 @@ const RandomLunchView: React.FC = () => {
     type: "",
   });
   const [foods, setFoods] = useState<Food[]>();
+  const [selectedFood, setSelectedFood] = useState<Food>();
 
   const getFoods = async () => {
     const res = await DB.read("foods/");
@@ -22,6 +23,11 @@ const RandomLunchView: React.FC = () => {
   useEffect(() => {
     getFoods();
   }, []);
+
+  const getRandomFood = () => {
+    const random_index = Math.floor(Math.random() * foods.length);
+    setSelectedFood(foods[random_index]);
+  };
 
   const handleChangeFormData = (e: ChangeEvent<HTMLInputElement>) => {
     switch (e.target.name) {
@@ -86,6 +92,8 @@ const RandomLunchView: React.FC = () => {
         </div>
         <button>추가하기</button>
       </form>
+      <button onClick={getRandomFood}>오늘 메뉴 추천!</button>
+      {selectedFood ? <div>오늘의 메뉴: {selectedFood.name}</div> : null}
     </div>
   );
 };
