@@ -5,6 +5,7 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 const RandomLunchView: React.FC = () => {
   const [formData, setFormData] = useState<Food>({
     name: "",
+    food: "",
     category: "",
     region: "",
     type: "",
@@ -31,10 +32,10 @@ const RandomLunchView: React.FC = () => {
 
   const handleChangeFormData = (e: ChangeEvent<HTMLInputElement>) => {
     switch (e.target.name) {
-      case "name":
+      case "food":
         setFormData((prev) => ({
           ...prev,
-          name: e.target.value,
+          food: e.target.value,
         }));
         break;
       case "category":
@@ -47,6 +48,12 @@ const RandomLunchView: React.FC = () => {
         setFormData((prev) => ({
           ...prev,
           region: e.target.value,
+        }));
+        break;
+      case "name":
+        setFormData((prev) => ({
+          ...prev,
+          name: e.target.value,
         }));
         break;
       default:
@@ -62,10 +69,19 @@ const RandomLunchView: React.FC = () => {
 
   return (
     <div>
-      {foods?.length > 0 && foods.map((e) => <div key={e.name}>{e.name}</div>)}
+      {foods?.length > 0 && foods.map((e) => <div key={e.name}>{e.food}</div>)}
       <form onSubmit={(e) => addFood(e)}>
         <div>
           <label>음식명</label>
+          <input
+            name="food"
+            value={formData.food}
+            onChange={handleChangeFormData}
+          />
+        </div>
+
+        <div>
+          <label>가게명</label>
           <input
             name="name"
             value={formData.name}
