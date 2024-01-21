@@ -69,7 +69,14 @@ const RandomLunchView: React.FC = () => {
 
   return (
     <div>
-      {foods?.length > 0 && foods.map((e) => <div key={e.name}>{e.food}</div>)}
+      {foods?.length > 0 &&
+        foods.map((e) => (
+          <div key={e.name}>
+            <div>가게명: {e.name}</div>
+            <div>음식: {e.food}</div>
+            <div>위치: {e.region}</div>
+          </div>
+        ))}
       <form onSubmit={(e) => addFood(e)}>
         <div>
           <label>음식명</label>
