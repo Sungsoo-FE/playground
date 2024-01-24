@@ -67,8 +67,13 @@ const RandomLunchView: React.FC = () => {
     getFoods();
   };
 
+  const shuffleFoods = () => {
+    setFoods([...foods.sort(() => Math.random() - 0.5)]);
+  };
+
   return (
     <div>
+      <button onClick={shuffleFoods}>랜덤 섞기</button>
       {foods?.length > 0 &&
         foods.map((e) => (
           <div key={e.name}>
